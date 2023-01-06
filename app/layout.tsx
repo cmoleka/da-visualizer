@@ -1,5 +1,5 @@
 import "@styles/globals.css";
-import { LayoutProps } from "@projectTypes/dir";
+import type { LayoutProps } from "@projectTypes/dir";
 import SideBar from "@ui/sideBar";
 
 const RootLayout = ({ children }: LayoutProps) => {
@@ -7,7 +7,7 @@ const RootLayout = ({ children }: LayoutProps) => {
     <html lang="en">
       <head />
       <body>
-        <div className="flex flex-row bg-white h-screen">
+        <div className="flex h-screen flex-row bg-white">
           <SideBar />
           {children}
         </div>
