@@ -1,28 +1,28 @@
-# Create T3 App
+# Data Structure & Algo visualization
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This project aims to provide a comprehensive visual format to illustrate Data Structures and Algorithms. By doing so, we hope to create an easy-to-follow resource for both novice and experienced users to better understand the fundamentals of data structures and algorithms. Through a series of diagrams, charts, and explanations, the goal is to help individuals gain a better understanding of these topics in a more accessible and visually appealing way.
 
-## What's next? How do I make an app with this?
+## Tech behind this project
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
+- [T3Stack](https://create.t3.gg/) - This is a T3 Stack project bootstrapped with create-t3-app.
 - [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
 - [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- [Typescript](https://www.typescriptlang.org)
+- [Radix-ui](https://www.radix-ui.com) - hoping to improve UI with this later.
 
-## Learn More
+## Development environement
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- Node v18.12.1
+- Npm v8.19.2
 
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+## Can I contribute?
+
+Sure, go ahead and fork the project, create issues and submit a PR.
+
+## Project by
+
+- [Carlo Moleka](https://github.com/cmoleka) - GitHub Profile
