@@ -1,32 +1,23 @@
 "use client";
 
-import type {
-  ChangeEvent,
-  FormEvent,
-  FormEventHandler,
-  MouseEventHandler,
-} from "react";
+import type { ChangeEvent, FormEventHandler } from "react";
 import { useState } from "react";
-import type { NextPage } from "next";
+// import type { NextPage } from "next";
+import type { FC } from "react";
 import { Node as NodeClass } from "@lib/ds/node";
 import { NodeComponent } from "@ui/Node";
-import classnames from "classnames";
-import Link from "next/link";
 
 interface ValueData {
   [key: string]: string;
 }
 
 interface NodeValueType<T extends ValueData> {
-  // value: { [key: string]: string };
-  // previousNode?: NodeClass<typeof NodeClass>;
-  // nextNode?: NodeClass<typeof NodeClass>;
   value: T;
   previousNode?: NodeClass<T> | null;
   nextNode?: NodeClass<T> | null;
 }
 
-const NodePage: NextPage = () => {
+const NodePage: FC = () => {
   const [nodeInstances, setNodeInstances] = useState<
     NodeClass<NodeValueType<ValueData>>[]
   >([]);
