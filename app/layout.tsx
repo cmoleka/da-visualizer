@@ -1,4 +1,4 @@
-import "@styles/globals.css";
+import "@styles/globals.scss";
 import type { LayoutProps } from "@projectTypes/dir";
 import SideBar from "@ui/sideBar";
 
@@ -6,10 +6,13 @@ const RootLayout = ({ children }: LayoutProps) => {
   return (
     <html lang="en">
       <head />
-      <body>
-        <div className="flex h-screen flex-row bg-white">
+      <body className="h-full w-full">
+        <div className="flex h-full flex-row bg-white">
           <SideBar />
-          {children}
+          <section className="w-full h-full">
+            <div className="w-4/5 py-4 container mx-auto space-y-4 h-full flex flex-col items-start justify-center">
+              {children}
+            </div></section>
         </div>
       </body>
     </html>
