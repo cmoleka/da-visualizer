@@ -99,50 +99,57 @@ const NodePage: FC = () => {
   return (
     <>
       <header className="space-y-4">
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          Node</h1>
-        <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+          Node
+        </h1>
+        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
           A node is a basic unit of data storage in a computer system. It is
           often used as a building block for more complex data structures such
           as linked lists, trees, and graphs.
         </p>
       </header>
-      <main className="flex flex-row justify-between gap-4 space-x-6 divide-x-2">
+      <main className="flex w-full flex-row justify-between gap-4 space-x-6 divide-x-2">
         <form
           onSubmit={handleOnSubmit}
-          className="flex w-2/5 flex-col space-y-4"
+          className="flex w-1/2 flex-col space-y-4"
         >
-          <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Form</h2>
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Enter data:</label>
+          <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+            Form
+          </h2>
+          <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
+            Enter data:
+          </label>
           <input
             type="text"
             value={nodeInstance.value.value.name}
             onChange={onNewNodeInputChange}
             placeholder="Enter name"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
           />
           <button
             value="submit"
-            className={`w-96 rounded-md border-2 bg-red-500 p-2 font-bold capitalize text-white`}
+            className={`rounded-md border-2 bg-red-500 px-4 py-2 font-bold capitalize text-white`}
             onClick={() => setAllowNewNode("parent")}
-          // disabled={!allowNewNode}
+            // disabled={!allowNewNode}
           >
             Add new Parent node
           </button>
           {nodeInstances.length > 0 && (
             <button
               value="submit"
-              className={`w-96 rounded-md border-2 bg-blue-500 p-2 font-bold capitalize text-white`}
+              className={` rounded-md border-2 bg-blue-500 px-4 py-2 font-bold capitalize text-white`}
               onClick={() => setAllowNewNode("child")}
             >
               Add new Child node
             </button>
           )}
-          <h3 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">How does it work?</h3>
-          <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+          <h3 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-2xl lg:text-4xl">
+            How does it work?
+          </h3>
+          <p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
             A node typically consists of two main parts:
           </p>
-          <ol className="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+          <ol className="max-w-md list-inside list-disc space-y-1 text-gray-500 dark:text-gray-400">
             <li>
               Data: This is the information stored within the node. The data can
               be of any type, such as a number, string, or object.
@@ -156,20 +163,22 @@ const NodePage: FC = () => {
               children.
             </li>
           </ol>
-          <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+          <p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
             Nodes are typically connected to each other in some way, forming a
             chain or a tree-like structure. This allows data to be stored and
             accessed in a logical and organized manner, enabling efficient
             searching and retrieval of information.{" "}
           </p>
 
-          <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+          <p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
             There are many different types of nodes and data structures that
             make use of nodes, each with its own specific characteristics and
             uses. Some common examples include singly linked lists, doubly
             linked lists, binary trees, and graphs.
           </p>
-          <h3 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-4xl dark:text-white">Implementation (Github repo)</h3>
+          <h3 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-2xl lg:text-4xl">
+            Implementation (Github repo)
+          </h3>
           <ul>
             <li className="font-bold text-blue-500">
               <a
@@ -191,8 +200,10 @@ const NodePage: FC = () => {
             </li>
           </ul>
         </form>
-        <section className="w-full space-y-4 px-4">
-          <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Visual</h2>
+        <section className="w-1/2 space-y-4 px-4">
+          <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+            Visual
+          </h2>
           <div className="">
             {nodeInstances.length > 0 ? (
               <>
@@ -200,7 +211,9 @@ const NodePage: FC = () => {
                   if (parendNode.previousNode === null) {
                     return (
                       <div key={parentIndex}>
-                        <p className="tree">Head</p>
+                        <p className="tree font-bold text-gray-800 dark:text-gray-300">
+                          Head
+                        </p>
                         <ul className="tree">
                           <li onClick={() => handleSelectedNode(parentIndex)}>
                             <NodeComponent
@@ -213,7 +226,7 @@ const NodePage: FC = () => {
                               if (
                                 childNode.previousNode !== null &&
                                 childNode.previousNode.value.value.name ===
-                                parendNode.value.value.name
+                                  parendNode.value.value.name
                               ) {
                                 return (
                                   <li
@@ -238,7 +251,9 @@ const NodePage: FC = () => {
                 })}
               </>
             ) : (
-              <span className="text-blue-600 dark:text-blue-500 text-xl font-extrabold">Add a new node</span>
+              <span className="text-xl font-extrabold text-blue-600 dark:text-blue-500">
+                Add a new node
+              </span>
             )}
           </div>
         </section>

@@ -1,29 +1,20 @@
-ul.tree, ul.tree ul {
-    list-style: none;
-     margin: 0;
-     padding: 0;
-   }
-   ul.tree ul {
-     margin-left: 1em;
-   }
-   ul.tree li {
-margin-left: 0.35em;
-    border-left: thin solid #000;
-
-   }
-   ul.tree li:last-child {
-       border-left:none;
-   }
-   ul.tree li:before {
-width: 0.9em;
-    height: 0.6em;
-    margin-right: 0.1em;
-    vertical-align: top;
-    border-bottom: thin solid #000;
-    content: "";
-    display: inline-block;
-   }
-   ul.tree li:last-child:before {
-    border-left: thin solid #000;
-
-   }
+ul.tree,
+ul.tree ul {
+  @apply m-0 list-none p-0;
+}
+ul.tree ul {
+  @apply ml-4;
+}
+ul.tree li {
+  @apply ml-2 border-l-2 border-gray-900 dark:border-gray-400;
+}
+ul.tree li:last-child {
+  @apply border-l-0;
+}
+ul.tree li:before {
+  content: "";
+  @apply mr-4 inline-block h-4 w-4 border-b-2 border-gray-900 align-top dark:border-gray-400;
+}
+ul.tree li:last-child:before {
+  @apply border-l-2 border-gray-900 dark:border-gray-400;
+}

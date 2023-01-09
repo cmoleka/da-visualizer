@@ -2,14 +2,14 @@
 
 import type { FC } from "react";
 
-const Page: FC = () => {
+const HomePage: FC = () => {
   return (
     <>
       <header>
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl ">
           Data sctructure and Algorithms visualizer
         </h1>
-        <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+        <p className="text-lg font-normal text-gray-500 dark:text-gray-400 lg:text-xl">
           This project aims to provide a comprehensive visual format to
           illustrate Data Structures and Algorithms. By doing so, we hope to
           create an easy-to-follow resource for both novice and experienced
@@ -20,16 +20,20 @@ const Page: FC = () => {
         </p>
       </header>
       <main className="space-y-4">
-        <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Tech behind this project</h2>
-        <ul className="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+        <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+          Tech behind this project
+        </h2>
+        <ul className="max-w-md list-inside list-disc space-y-1 text-gray-500 dark:text-gray-400">
           <li>T3Stack</li>
           <li>Next.js</li>
           <li>Typescript</li>
           <li>Tailwind Css</li>
         </ul>
-        <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
-          Project by <span className="text-blue-600 dark:text-blue-500">Carlo Moleka</span></h2>
-        <ul className="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+        <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
+          Project by{" "}
+          <span className="text-blue-600 dark:text-blue-500">Carlo Moleka</span>
+        </h2>
+        <ul className="max-w-md list-inside list-disc space-y-1 text-gray-500 dark:text-gray-400">
           <li>
             <a
               href="https://github.com/cmoleka"
@@ -54,4 +58,4 @@ const Page: FC = () => {
   );
 };
 
-export default Page;
+export default HomePage;
