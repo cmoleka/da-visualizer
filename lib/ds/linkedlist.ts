@@ -1,11 +1,10 @@
 import { Node } from "@lib/ds/node";
 
-
 export class LinkedList<T> {
   //     A linked list is a linear data structure where elements are not stored at contiguous
   //     location. Instead the elements are linked using pointers.
   //     In a linked list data is stored in nodes and each node is linked to the next and,
-  //     optionally, to the previous. 
+  //     optionally, to the previous.
   //     Each node in a list consists of the following parts:
   //
   //     1) data
@@ -42,11 +41,10 @@ export class LinkedList<T> {
     if (!this.headNode) {
       this.headNode = newNode;
       this.tailNode = newNode;
-    };
-    if (this.headNode) {
-      this.tailNode!.nextNode = newNode;
-      this.tailNode = newNode;
     }
+    if (this.tailNode) this.tailNode.nextNode = newNode;
+    // this.tailNode.nextNode = newNode;
+    this.tailNode = newNode;
     this.length++;
   }
 
@@ -67,11 +65,11 @@ export class LinkedList<T> {
     }
     let currentNode = this.headNode;
     let previousNode: Node<T> | null = null;
-    while (currentNode!.nextNode) {
+    while (currentNode.nextNode) {
       previousNode = currentNode;
       currentNode = currentNode.nextNode;
     }
-    previousNode!.nextNode = null;
+    if (previousNode) previousNode.nextNode = null;
     this.tailNode = previousNode;
     this.length--;
   }
@@ -87,13 +85,13 @@ export class LinkedList<T> {
     }
     let currentNode = this.headNode;
     let previousNode: Node<T> | null = null;
-    while (currentNode!.value !== value) {
+    while (currentNode.value !== value) {
       if (!currentNode.nextNode) return;
       previousNode = currentNode;
       currentNode = currentNode.nextNode;
     }
-    previousNode!.nextNode = currentNode!.nextNode;
-    if (!currentNode!.nextNode) this.tailNode = previousNode;
+    if (previousNode) previousNode.nextNode = currentNode.nextNode;
+    if (!currentNode.nextNode) this.tailNode = previousNode;
     this.length--;
   }
 
@@ -103,7 +101,7 @@ export class LinkedList<T> {
     let currentNode = this.headNode;
     let currentIndex = 0;
     while (currentIndex < index) {
-      currentNode = currentNode.nextNode!;
+      currentNode = currentNode.nextNode as Node<T>;
       currentIndex++;
     }
     return currentNode;
@@ -127,13 +125,13 @@ export class LinkedList<T> {
   }
 
   stringifyList(): string {
-    let stringList: string = '';
+    let stringList = "";
     let currentNode = this.getHeadNode();
     while (currentNode) {
-      if (currentNode.getValue() !== null) stringList += `${currentNode.getValue()}\n`;
+      if (currentNode.getValue() !== null)
+        stringList += `${currentNode.getValue()}\n`;
       currentNode = currentNode.getNextNode() as Node<T>;
     }
     return stringList;
   }
-
 }
