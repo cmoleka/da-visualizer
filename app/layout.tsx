@@ -1,6 +1,7 @@
 import "@styles/globals.scss";
 import type { LayoutProps } from "@projectTypes/dir";
 import SideBar from "@ui/sideBar";
+import { AnalyticsWrapper } from '@ui/analytics';
 
 const RootLayout = ({ children }: LayoutProps) => {
   return (
@@ -12,6 +13,7 @@ const RootLayout = ({ children }: LayoutProps) => {
           <section className="w-full h-full">
             <div className="w-4/5 py-4 container mx-auto space-y-4 h-full flex flex-col items-start justify-center">
               {children}
+              <AnalyticsWrapper />
             </div></section>
         </div>
       </body>
