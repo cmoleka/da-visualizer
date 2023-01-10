@@ -8,7 +8,7 @@ const RootLayout = ({ children }: LayoutProps) => {
     <html lang="en">
       <head />
       <body className="h-full w-full bg-white dark:bg-gray-900">
-        <div className="flex flex-row">
+        <div className="flex md:flex-row flex-col ">
           <SideBar />
           <section className="h-full w-full">
             <div className="container mx-auto flex h-full w-full flex-col items-start justify-center space-y-4 p-4">

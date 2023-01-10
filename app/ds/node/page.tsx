@@ -108,10 +108,10 @@ const NodePage: FC = () => {
           as linked lists, trees, and graphs.
         </p>
       </header>
-      <main className="flex w-full flex-row justify-between gap-4 space-x-6 divide-x-2">
+      <main className="flex w-full flex-col md:flex-row justify-between gap-4 md:space-x-6 divide-y-2 md:divide-x-2">
         <form
           onSubmit={handleOnSubmit}
-          className="flex w-1/2 flex-col space-y-4"
+          className="flex w-full md:w-1/2 flex-col space-y-4 order-last md:order-first"
         >
           <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
             Form
@@ -130,7 +130,7 @@ const NodePage: FC = () => {
             value="submit"
             className={`rounded-md border-2 bg-red-500 px-4 py-2 font-bold capitalize text-white`}
             onClick={() => setAllowNewNode("parent")}
-            // disabled={!allowNewNode}
+          // disabled={!allowNewNode}
           >
             Add new Parent node
           </button>
@@ -200,7 +200,7 @@ const NodePage: FC = () => {
             </li>
           </ul>
         </form>
-        <section className="w-1/2 space-y-4 px-4">
+        <section className="w-full md:w-1/2 space-y-4 py-4 md:px-4 order-first md:order-last">
           <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
             Visual
           </h2>
@@ -226,7 +226,7 @@ const NodePage: FC = () => {
                               if (
                                 childNode.previousNode !== null &&
                                 childNode.previousNode.value.value.name ===
-                                  parendNode.value.value.name
+                                parendNode.value.value.name
                               ) {
                                 return (
                                   <li
