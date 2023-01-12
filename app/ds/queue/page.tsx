@@ -1,26 +1,36 @@
 "use client";
 
-import type { FC, ChangeEvent } from "react";
+import type { FC, ChangeEvent, FormEvent, MutableRefObject } from "react";
 // import { Node as NodeClass } from "@lib/ds/node";
 import { Queue } from "@lib/ds/queue";
 import { useRef, useState } from "react";
 
 interface QueueData {
   name: string;
+  value?: string;
+}
+
+interface QueueForm {
+  maxSize: number;
+  buttonId: string;
+  visitor?: QueueData;
 }
 
 const QueuePage: FC = () => {
-  const queueForm = useRef<HTMLFormElement>(null);
+  const queueForm = useRef<HTMLFormElement>(null) as MutableRefObject<
+    HTMLFormElement & QueueForm
+  >;
+
   const [queueInstance, setQueueInstance] = useState<Queue<QueueData>>(
     new Queue({ maxSize: 0 })
   );
   const [selectedVisitor, setSelectedVisitor] = useState<QueueData>({
     name: "",
   });
-  const [returnedSelectedVisitor, setReturnedSelectedVisitor] = useState<QueueData>({
-
-    name: "",
-  });
+  const [returnedSelectedVisitor, setReturnedSelectedVisitor] =
+    useState<QueueData>({
+      name: "",
+    });
   const [addedVisitors, setAddedVisitors] = useState<QueueData[]>([]);
 
   const VISITORS = ["Safi", "Carlo", "John", "Eric"] as const;
@@ -28,7 +38,7 @@ const QueuePage: FC = () => {
 
   const getQueue = (): QueueData[] => {
     return queueInstance.getQueue();
-  }
+  };
 
   const handleOnChangeMaxSize = ({
     target,
@@ -36,12 +46,15 @@ const QueuePage: FC = () => {
     const maxSize = target.value;
     if (!maxSize) throw Error("MaxSize is empty");
     if (!queueInstance) throw Error("The Queue is null");
+    queueInstance.setMaxSize(parseInt(maxSize));
     setQueueInstance((prevState) => {
-      const updatedQueueInstance = new Queue({ ...prevState, maxSize: parseInt(maxSize) }) as Queue<QueueData>;
+      const updatedQueueInstance = new Queue({
+        ...prevState,
+        maxSize: parseInt(maxSize),
+      }) as Queue<QueueData>;
       return updatedQueueInstance;
-    })
+    });
   };
-
 
   const handleOnValueChange = ({
     target,
@@ -54,12 +67,12 @@ const QueuePage: FC = () => {
 
   const handleOnEnqueue = () => {
     if (!queueInstance) throw Error("The Queue is null");
-    if (!addedVisitors.includes(selectedVisitor)) {
-      setQueueInstance((prevState) => {
-        queueInstance.enqueue(selectedVisitor);
-        const updatedQueueInstance = Object.assign(prevState, queueInstance);
-        return updatedQueueInstance;
-      });
+    if (!selectedVisitor) throw Error("Visitor is null");
+    if (
+      !addedVisitors.find((visitor) => visitor.name === selectedVisitor.name)
+    ) {
+      queueInstance.enqueue(selectedVisitor);
+      setAddedVisitors([...addedVisitors, selectedVisitor]);
     }
   };
 
@@ -67,13 +80,13 @@ const QueuePage: FC = () => {
     if (!queueInstance) throw Error("The Queue is null");
     const dequeuedVisitor = queueInstance?.dequeue();
     if (!dequeuedVisitor) throw Error("Dequeued visitor is null");
-    setQueueInstance((prevState) => Object.assign(prevState, queueInstance));
+    addedVisitors.shift();
     setReturnedSelectedVisitor(dequeuedVisitor);
   };
 
-  const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleOnSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const target = e.target as HTMLFormElement;
+    const target = e.target as QueueForm & HTMLFormElement;
     if (target.buttonId == "enqueue") handleOnEnqueue();
     if (target.buttonId == "dequeue") handleOnDequeue();
   };
@@ -93,35 +106,35 @@ const QueuePage: FC = () => {
       </header>
       <main className="flex w-full flex-col justify-between gap-4 space-y-6 divide-y-2">
         <div className="flex flex-col space-y-4">
-          <h2 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-xl lg:text-2xl">
-            Mutations
-          </h2>
-          <div className="flex w-full flex-col space-y-4 md:flex-row md:space-y-0">
-            <label
-              htmlFor="maxsize"
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Select your country
-            </label>
-            <select
-              name="maxSize"
-              id="countries"
-              defaultValue="Choose Here"
-              onChange={(e) => handleOnChangeMaxSize(e)}
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-            >
-              {MAX_SIZE.map((size, index) => (
-                <option key={index} value={size}>
-                  {size}
-                </option>
-              ))}
-            </select>
-          </div>
           <form
             onSubmit={handleOnSubmit}
             className="flex flex-col space-y-4"
             ref={queueForm}
           >
+            <h2 className="mb-4 text-xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-xl lg:text-2xl">
+              Mutations
+            </h2>
+            <div className="flex w-full flex-col space-y-4 md:flex-row md:space-y-0">
+              <label
+                htmlFor="maxsize"
+                className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Select Queue size
+              </label>
+              <select
+                name="maxSize"
+                id="countries"
+                defaultValue="Choose Here"
+                onChange={(e) => handleOnChangeMaxSize(e)}
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              >
+                {MAX_SIZE.map((size, index) => (
+                  <option key={index} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+            </div>
             {VISITORS.map((visitor, index) => (
               <div className="flex flex-row space-x-4" key={index}>
                 <input
@@ -131,7 +144,12 @@ const QueuePage: FC = () => {
                   value={visitor}
                   id={visitor}
                 />
-                <label htmlFor={visitor} className="text-gray-900 dark:text-white">{visitor}</label>
+                <label
+                  htmlFor={visitor}
+                  className="text-gray-900 dark:text-white"
+                >
+                  {visitor}
+                </label>
               </div>
             ))}
             <button
@@ -158,16 +176,16 @@ const QueuePage: FC = () => {
             >
               Remove from Queue
             </button>
+            <div className="flex flex-row flex-wrap justify-center space-y-2 space-x-4 divide-x-2">
+              {getQueue().map((visitor, index) => (
+                <div key={index} className="flex flex-col space-y-2">
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">
+                    {visitor.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </form>
-          <div className="flex flex-row flex-wrap justify-center space-y-2 space-x-4 divide-x-2">
-            {getQueue().map((visitor, index) => (
-              <div key={index} className="flex flex-col space-y-2">
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
-                  {visitor.name}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </main>
     </>
