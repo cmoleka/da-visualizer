@@ -12,30 +12,36 @@ interface QueueData {
 const QueuePage: FC = () => {
   const queueForm = useRef<HTMLFormElement>(null);
   const [queueInstance, setQueueInstance] = useState<Queue<QueueData>>(
-    new Queue(0)
+    new Queue({ maxSize: 0 })
   );
-  const [selectedVisitor, setSelectedVisitor] = useState<{ name: string }>({
+  const [selectedVisitor, setSelectedVisitor] = useState<QueueData>({
     name: "",
   });
-  const [returnedSelectedVisitor, setReturnedSelectedVisitor] = useState<{
-    name: string;
-  }>({
+  const [returnedSelectedVisitor, setReturnedSelectedVisitor] = useState<QueueData>({
+
     name: "",
   });
+  const [addedVisitors, setAddedVisitors] = useState<QueueData[]>([]);
 
   const VISITORS = ["Safi", "Carlo", "John", "Eric"] as const;
   const MAX_SIZE = [5, 10, 15, 20] as const;
 
-  const handleChangeMaxSize = ({
+  const getQueue = (): QueueData[] => {
+    return queueInstance.getQueue();
+  }
+
+  const handleOnChangeMaxSize = ({
     target,
   }: ChangeEvent<HTMLSelectElement>): void => {
     const maxSize = target.value;
     if (!maxSize) throw Error("MaxSize is empty");
     if (!queueInstance) throw Error("The Queue is null");
-    const _queueInstance = queueInstance;
-    _queueInstance.setMaxSize.bind(_queueInstance, parseInt(maxSize));
-    setQueueInstance((prevState) => Object.assign(prevState, _queueInstance));
+    setQueueInstance((prevState) => {
+      const updatedQueueInstance = new Queue({ ...prevState, maxSize: parseInt(maxSize) }) as Queue<QueueData>;
+      return updatedQueueInstance;
+    })
   };
+
 
   const handleOnValueChange = ({
     target,
@@ -48,14 +54,20 @@ const QueuePage: FC = () => {
 
   const handleOnEnqueue = () => {
     if (!queueInstance) throw Error("The Queue is null");
-    queueInstance.enqueue.bind(queueInstance, selectedVisitor);
+    if (!addedVisitors.includes(selectedVisitor)) {
+      setQueueInstance((prevState) => {
+        queueInstance.enqueue(selectedVisitor);
+        const updatedQueueInstance = Object.assign(prevState, queueInstance);
+        return updatedQueueInstance;
+      });
+    }
   };
 
   const handleOnDequeue = (): void => {
     if (!queueInstance) throw Error("The Queue is null");
-    const dequeuedVisitor = queueInstance?.dequeue.bind(queueInstance);
-    console.log(dequeuedVisitor);
+    const dequeuedVisitor = queueInstance?.dequeue();
     if (!dequeuedVisitor) throw Error("Dequeued visitor is null");
+    setQueueInstance((prevState) => Object.assign(prevState, queueInstance));
     setReturnedSelectedVisitor(dequeuedVisitor);
   };
 
@@ -95,7 +107,7 @@ const QueuePage: FC = () => {
               name="maxSize"
               id="countries"
               defaultValue="Choose Here"
-              onChange={(e) => handleChangeMaxSize(e)}
+              onChange={(e) => handleOnChangeMaxSize(e)}
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             >
               {MAX_SIZE.map((size, index) => (
@@ -119,12 +131,11 @@ const QueuePage: FC = () => {
                   value={visitor}
                   id={visitor}
                 />
-                <label htmlFor={visitor}>{visitor}</label>
+                <label htmlFor={visitor} className="text-gray-900 dark:text-white">{visitor}</label>
               </div>
             ))}
             <button
               id="enqueue"
-              type="submit"
               name="enqueue"
               className="w-full rounded-md  bg-blue-600 py-2  px-4 text-base font-bold capitalize text-white"
               onClick={(e) => {
@@ -137,7 +148,6 @@ const QueuePage: FC = () => {
             </button>
             <button
               id="dequeue"
-              type="submit"
               name="dequeue"
               className="w-full rounded-md  bg-red-600 py-2  px-4 text-base font-bold capitalize text-white"
               onClick={(e) => {
@@ -150,7 +160,7 @@ const QueuePage: FC = () => {
             </button>
           </form>
           <div className="flex flex-row flex-wrap justify-center space-y-2 space-x-4 divide-x-2">
-            {queueInstance?.getQueue().map((visitor, index) => (
+            {getQueue().map((visitor, index) => (
               <div key={index} className="flex flex-col space-y-2">
                 <span className="text-sm font-bold text-gray-900 dark:text-white">
                   {visitor.name}

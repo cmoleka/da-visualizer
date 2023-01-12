@@ -3,12 +3,12 @@ export class Queue<T> {
   // sequence of items. You can describe it as a first in, first out (FIFO) structure.
   // The first element to be added to the queue will be the first element to be removed
   // from the queue.
-  private queue: T[];
+  public queue: T[];
   public maxSize: number;
   private front: number;
   private rear: number;
 
-  constructor(maxSize: number) {
+  constructor({ maxSize }: { maxSize: number; }) {
     this.queue = [];
     this.maxSize = maxSize;
     this.front = 0;
@@ -27,14 +27,14 @@ export class Queue<T> {
 
   // isFull: Returns {Boolean} if Queue is full or empty.
   isFull(): boolean {
-    if (!(this.rear + 1 == this.maxSize)) return false;
-    return true;
+    if (this.rear + 1 == this.maxSize) return true;
+    return false;
   }
 
   // isEmpty: Returns {Boolean} if Queue is empty or not.
   isEmpty(): boolean {
-    if (!(this.front > this.rear)) return false;
-    return true;
+    if (this.front > this.rear) return true;
+    return false;
   }
 
   // enqueue: Inserts {item} inside the queue.
@@ -42,16 +42,14 @@ export class Queue<T> {
     if (this.isFull()) return;
     this.rear = this.rear + 1;
     if (!data) throw Error;
-    console.log(data);
     this.queue.splice(this.rear, 0, data);
   }
 
   // dequeuek: Removes {item} from the queue and return it.
-  dequeue(): T {
+  dequeue(): T | void {
     let dequeuedItem: T | null = null;
-    if (this.isEmpty()) throw Error("Queue is empty");
+    if (this.isEmpty()) return;
     dequeuedItem = this.queue.shift() as T;
-    console.log(dequeuedItem);
     this.front = this.front + 1;
     return dequeuedItem;
   }
