@@ -48,6 +48,11 @@ const SideBar: FC = () => {
               <span className="block">Linked List</span>
             </Link>
           </li>
+          <li className="block rounded-lg px-4 py-2 text-base text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white">
+            <Link href={"/ds/queue"}>
+              <span className="block">Queue</span>
+            </Link>
+          </li>
           <h2 className="px-4 text-lg font-bold text-gray-600  dark:text-gray-200">
             Algorithms
           </h2>
