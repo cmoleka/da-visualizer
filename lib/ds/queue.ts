@@ -27,29 +27,31 @@ export class Queue<T> {
 
   // isFull: Returns {Boolean} if Queue is full or empty.
   isFull(): boolean {
-    if (this.rear + 1 == this.maxSize) return true;
-    return false;
+    return this.rear + 1 == this.maxSize;
   }
 
   // isEmpty: Returns {Boolean} if Queue is empty or not.
   isEmpty(): boolean {
-    if (this.front > this.rear) return true;
-    return false;
+    return this.front > this.rear;
   }
 
   // enqueue: Inserts {item} inside the queue.
   enqueue(data: T): void {
-    if (this.isFull()) return;
-    this.rear = this.rear + 1;
-    if (!data) throw Error;
+    if (!data) throw Error("Data is either null or undefined.");
+    if (this.isFull()) throw Error("The queue is full.");
     this.queue.splice(this.rear, 0, data);
+    this.rear = this.rear + 1;
   }
 
   // dequeuek: Removes {item} from the queue and return it.
-  dequeue(): T | void {
-    let dequeuedItem: T | null = null;
-    if (this.isEmpty()) return;
-    dequeuedItem = this.queue.shift() as T;
+  dequeue(): T | null {
+    if (this.isEmpty()) {
+      this.front = 0;
+      this.rear = -1;
+      return null
+    };
+    const dequeuedItem = this.queue.shift() as T;
+    if (this.front === this.rear) { this.front = -1; this.rear = -1 };
     this.front = this.front + 1;
     return dequeuedItem;
   }
