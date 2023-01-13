@@ -8,7 +8,7 @@ export class Queue<T> {
   private front: number;
   private rear: number;
 
-  constructor({ maxSize }: { maxSize: number; }) {
+  constructor({ maxSize }: { maxSize: number }) {
     this.queue = [];
     this.maxSize = maxSize;
     this.front = 0;
@@ -39,8 +39,8 @@ export class Queue<T> {
   enqueue(data: T): void {
     if (!data) throw Error("Data is either null or undefined.");
     if (this.isFull()) throw Error("The queue is full.");
+    this.rear += 1;
     this.queue.splice(this.rear, 0, data);
-    this.rear = this.rear + 1;
   }
 
   // dequeuek: Removes {item} from the queue and return it.
@@ -48,11 +48,14 @@ export class Queue<T> {
     if (this.isEmpty()) {
       this.front = 0;
       this.rear = -1;
-      return null
-    };
+      return null;
+    }
     const dequeuedItem = this.queue.shift() as T;
-    if (this.front === this.rear) { this.front = -1; this.rear = -1 };
-    this.front = this.front + 1;
+    if (this.front === this.rear) {
+      this.front = -1;
+      this.rear = -1;
+    }
+    this.front += 1;
     return dequeuedItem;
   }
 }

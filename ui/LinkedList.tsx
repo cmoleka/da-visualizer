@@ -61,16 +61,6 @@ const LinkedListItem: FC<{
           </span>
         </div>
       </div>
-      {/* {node?.value === headNode?.value && (
-        <div className="mx-auto flex w-fit flex-row justify-around">
-          <div className="flex flex-col justify-center space-y-2 p-2">
-            <span className="text-sm text-gray-500 dark:text-white">Data</span>
-          </div>
-          <div className="flex flex-col justify-center space-y-2 p-2">
-            <span className="text-sm text-gray-500 dark:text-white">Next</span>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };

@@ -1,9 +1,9 @@
 "use client";
 
 import type { FC, ChangeEvent, FormEvent, MutableRefObject } from "react";
-// import { Node as NodeClass } from "@lib/ds/node";
 import { Queue } from "@lib/ds/queue";
 import { useRef, useState } from "react";
+import QueueComponent from "@ui/Queue";
 
 interface QueueData {
   name: string;
@@ -36,10 +36,6 @@ const QueuePage: FC = () => {
   const VISITORS = ["Safi", "Carlo", "John", "Eric"] as const;
   const MAX_SIZE = [5, 10, 15, 20] as const;
 
-  const getQueue = (): QueueData[] => {
-    return queueInstance.getQueue();
-  };
-
   const handleOnChangeMaxSize = ({
     target,
   }: ChangeEvent<HTMLSelectElement>): void => {
@@ -47,13 +43,6 @@ const QueuePage: FC = () => {
     if (!maxSize) throw Error("MaxSize is empty");
     if (!queueInstance) throw Error("The Queue is null");
     queueInstance.setMaxSize(parseInt(maxSize));
-    // setQueueInstance((prevState) => {
-    //   const updatedQueueInstance = new Queue({
-    //     ...prevState,
-    //     maxSize: parseInt(maxSize),
-    //   }) as Queue<QueueData>;
-    //   return updatedQueueInstance;
-    // });
   };
 
   const handleOnValueChange = ({
@@ -73,7 +62,7 @@ const QueuePage: FC = () => {
     ) {
       queueInstance.enqueue(selectedVisitor);
       setAddedVisitors([...addedVisitors, selectedVisitor]);
-      setSelectedVisitor({ name: '' });
+      setSelectedVisitor({ name: "" });
     }
   };
 
@@ -81,7 +70,7 @@ const QueuePage: FC = () => {
     if (!queueInstance) return;
     const dequeuedVisitor = queueInstance?.dequeue();
     if (!dequeuedVisitor) return;
-    addedVisitors.shift();
+    addedVisitors.splice(addedVisitors.indexOf(dequeuedVisitor), 1);
     setReturnedSelectedVisitor(dequeuedVisitor);
   };
 
@@ -105,11 +94,11 @@ const QueuePage: FC = () => {
           first element to be removed from the queue.
         </p>
       </header>
-      <main className="flex w-full flex-col justify-between gap-4 space-y-6 divide-y-2">
-        <div className="mx-auto w-full flex flex-col md:flex-row space-y-4 space-x-4 divide-x-2">
+      <main className="flex w-full flex-col justify-between gap-4 space-y-6 md:divide-y-2 ">
+        <div className="mx-auto flex w-full flex-col space-y-4 md:flex-row md:space-x-4 md:divide-x-2">
           <form
             onSubmit={handleOnSubmit}
-            className="flex flex-col space-y-4 w-full md:w-1/2"
+            className="flex w-full flex-col space-y-4 md:w-1/2"
             ref={queueForm}
           >
             <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
@@ -129,6 +118,9 @@ const QueuePage: FC = () => {
                 onChange={(e) => handleOnChangeMaxSize(e)}
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               >
+                <option value="Choose Here" disabled>
+                  Select a size
+                </option>
                 {MAX_SIZE.map((size, index) => (
                   <option key={index} value={size}>
                     {size}
@@ -136,9 +128,7 @@ const QueuePage: FC = () => {
                 ))}
               </select>
             </div>
-            <label
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
               Predefined data
             </label>
             {VISITORS.map((visitor, index) => (
@@ -158,9 +148,7 @@ const QueuePage: FC = () => {
                 </label>
               </div>
             ))}
-            <label
-              className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-            >
+            <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
               Custom data (Name)
             </label>
             <div className="flex flex-row space-x-4">
@@ -168,6 +156,7 @@ const QueuePage: FC = () => {
                 onChange={(e) => handleOnValueChange(e)}
                 type="text"
                 name="visitor"
+                value={selectedVisitor.name}
                 placeholder="Enter custom name"
                 className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
@@ -197,29 +186,26 @@ const QueuePage: FC = () => {
               Remove from Queue
             </button>
           </form>
-          <section className="pl-4 flex-col w-full md:w-1/2">
+          <section className="w-full flex-col md:w-1/2 md:pl-4">
             <h2 className="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
               Visual
             </h2>
-            <div className="flex flex-row flex-wrap justify-center space-y-2 space-x-4 divide-x-2">
-              {queueInstance.queue.length > 0 ? queueInstance.queue.map((visitor, index) => (
-                <div key={index} className="flex flex-col space-y-2">
-                  <span className="text-sm font-bold text-gray-900 dark:text-white">
-                    {visitor.name}
-                  </span>
+            <div className="flex flex-col space-y-4">
+              {queueInstance.maxSize ? (
+                <QueueComponent
+                  queue={queueInstance.queue}
+                  dequeuedNode={returnedSelectedVisitor}
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center">
+                  <h3 className="text-lg font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-xl lg:text-2xl">
+                    Queue Visualizer
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Select a Max Size and add data to initialize the queue.
+                  </p>
                 </div>
-              )) :
-                (
-                  <div className="flex flex-col items-center justify-center">
-                    <h3 className="text-lg font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-xl lg:text-2xl">
-                      Queue Visualizer
-                    </h3>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      Select a Max Size to initialize the queue.
-                    </p>
-                  </div>
-                )
-              }
+              )}
             </div>
           </section>
         </div>
