@@ -21,9 +21,7 @@ const QueuePage: FC = () => {
     HTMLFormElement & QueueForm
   >;
 
-  const [queueInstance, setQueueInstance] = useState<Queue<QueueData>>(
-    new Queue({ maxSize: 0 })
-  );
+  const [queueInstance] = useState<Queue<QueueData>>(new Queue({ maxSize: 0 }));
   const [selectedVisitor, setSelectedVisitor] = useState<QueueData>({
     name: "",
   });

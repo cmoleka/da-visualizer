@@ -3,21 +3,16 @@ export class Queue<T> {
   // sequence of items. You can describe it as a first in, first out (FIFO) structure.
   // The first element to be added to the queue will be the first element to be removed
   // from the queue.
-  public queue: T[];
+  public queue: Set<T> = new Set();
   public maxSize: number;
-  private front: number;
-  private rear: number;
 
   constructor({ maxSize }: { maxSize: number }) {
-    this.queue = [];
     this.maxSize = maxSize;
-    this.front = 0;
-    this.rear = -1;
   }
 
   // getQueue: Returns {list} of Queue.
   getQueue(): T[] {
-    return this.queue;
+    return Array.from(this.queue);
   }
 
   // setMaxSize: Set the maxSize {number} of the queue.
@@ -27,35 +22,29 @@ export class Queue<T> {
 
   // isFull: Returns {Boolean} if Queue is full or empty.
   isFull(): boolean {
-    return this.rear + 1 == this.maxSize;
+    return this.queue.size == this.maxSize;
   }
 
   // isEmpty: Returns {Boolean} if Queue is empty or not.
   isEmpty(): boolean {
-    return this.front > this.rear;
+    // return this.front > this.rear;
+    return this.queue.size == 0;
   }
 
   // enqueue: Inserts {item} inside the queue.
   enqueue(data: T): void {
-    if (!data) throw Error("Data is either null or undefined.");
-    if (this.isFull()) throw Error("The queue is full.");
-    this.rear += 1;
-    this.queue.splice(this.rear, 0, data);
+    if (!data) return;
+    if (this.isFull()) return;
+    this.queue.add(data);
   }
 
   // dequeuek: Removes {item} from the queue and return it.
   dequeue(): T | null {
-    if (this.isEmpty()) {
-      this.front = 0;
-      this.rear = -1;
-      return null;
-    }
-    const dequeuedItem = this.queue.shift() as T;
-    if (this.front === this.rear) {
-      this.front = -1;
-      this.rear = -1;
-    }
-    this.front += 1;
-    return dequeuedItem;
+    if (this.isEmpty()) return null;
+    const dequeuedItem = Array.from(this.queue).filter(
+      (item) => item == Array.from(this.queue)[0]
+    )[0] as T;
+    this.queue.delete(dequeuedItem);
+    return dequeuedItem as T;
   }
 }

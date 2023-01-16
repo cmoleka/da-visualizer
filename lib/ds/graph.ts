@@ -1,81 +1,90 @@
-type NodesInterface = {
-  [key: number]: number[];
-};
-
 export class Graph {
-  private nodes: NodesInterface = {};
+  // nodes: { [key: number]: number[] } = {};
+  nodes: Map<number, number[]> = new Map();
+  edges: Map<string, number> = new Map();
 
-  addNode(value: number): void {
-    this.nodes[value] = [];
+  // !The basic operations provided by a graph data structure G usually include:
+  // * add_vertex(G, x): adds the vertex x, if it is not there;
+  addVertex(vertexX: number): void {
+    this.nodes.set(vertexX, []);
   }
 
-  addEdge(valueOne: number, valueTwo: number): void {
-    this.nodes[valueOne]?.push(valueTwo);
-    this.nodes[valueTwo]?.push(valueOne);
+  // * add_edge(G, x, y, z): adds the edge z from the vertex x to the vertex y, if it is not there;
+  addEdge(vertexX: number, vertexY: number): void {
+    this.nodes.get(vertexX)?.push(vertexY);
+    this.nodes.get(vertexY)?.push(vertexX);
   }
 
   showConnections(): string {
-    return Object.entries(this.nodes)
-      .map((node) => {
-        const connections: number[] = [];
-        node[1].map((connection) => connections.push(connection));
-        return `${node[0]} --> ${connections.join(",")}`;
-      })
-      .join("|>");
+    const result: string[] = [];
+    for (const [node, edges] of this.nodes.entries()) {
+      const connections: number[] = [];
+      edges.map((edge) => connections.push(edge));
+      result.push(`${node} --> ${connections.join(",")}`);
+    }
+    return result.join("|>");
   }
 
-  adjacent(vertexX: number, vertexY: number): boolean {
-    return this.nodes[vertexX]?.includes(vertexY) as boolean;
-  }
-
-  neighbors(vertexX: number): number[] {
-    return this.nodes[vertexX] || [];
-  }
-
-  removeVertex(vertexX: number): void {
-    if (this.nodes[vertexX]) delete this.nodes[vertexX];
-    return;
-  }
-
-  removeEdge(vertexX: number, vertexY: number): void {
-    if (!(this.nodes[vertexX] && this.adjacent(vertexX, vertexY))) return;
-    this.nodes[vertexX] = this.nodes[vertexX]?.filter(
-      (edge) => edge !== vertexY
-    ) as number[];
-  }
-
-  getVertexValue(vertexX: number): number[] | undefined {
-    if (!this.nodes[vertexX]) return undefined;
-    return this.nodes[vertexX] as number[];
-  }
-
-  // !The basic operations provided by a graph data structure G usually include:
   // * adjacent(G, x, y): tests whether there is an edge from the vertex x to the vertex y;
+  adjacent(vertexX: number, vertexY: number): boolean {
+    return this.nodes.get(vertexX)?.includes(vertexY) as boolean;
+  }
+
   // * neighbors(G, x): lists all vertices y such that there is an edge from the vertex x to the vertex y;
-  // * add_vertex(G, x): adds the vertex x, if it is not there;
-  // * add_edge(G, x, y, z): adds the edge z from the vertex x to the vertex y, if it is not there;
+  neighbors(vertexX: number): number[] {
+    return this.nodes.get(vertexX) || [];
+  }
+
   // * remove_vertex(G, x): removes the vertex x, if it is there;
+  removeVertex(vertexX: number): void {
+    if (this.nodes.get(vertexX)) this.nodes.delete(vertexX);
+  }
+
   // * remove_edge(G, x, y): removes the edge from the vertex x to the vertex y, if it is there;
+  removeEdge(vertexX: number, vertexY: number): void {
+    if (!(this.nodes.has(vertexX) && this.adjacent(vertexX, vertexY))) return;
+    this.nodes.set(
+      vertexX,
+      this.nodes.get(vertexX)?.filter((edge) => edge !== vertexY) as number[]
+    );
+  }
+
   // * get_vertex_value(G, x): returns the value associated with the vertex x;
-  // set_vertex_value(G, x, v): sets the value associated with the vertex x to v.
+  getVertexValue(vertexX: number): number[] | undefined {
+    if (!this.nodes.get(vertexX)) return undefined;
+    return this.nodes.get(vertexX) as number[];
+  }
+
+  // * set_vertex_value(G, x, v): sets the value associated with the vertex x to v.
+  setVertexValue(vertexX: number, value: number[]): void {
+    if (!this.nodes.get(vertexX)) return;
+    this.nodes.set(vertexX, value);
+  }
 
   // !Structures that associate values to the edges usually also provide:
-  // get_edge_value(G, x, y): returns the value associated with the edge (x, y);
-  // set_edge_value(G, x, y, v): sets the value associated with the edge (x, y) to v.
+  // * get_edge_value(G, x, y): returns the value associated with the edge (x, y);
+  getEdgeValue(vertexX: number, vertexY: number): number | void {
+    if (!this.adjacent(vertexX, vertexY)) return;
+    return this.edges.get(`${vertexX}-${vertexY}`);
+  }
+  // * set_edge_value(g, x, y, v): sets the value associated with the edge (x, y) to v.
+  setEdgeValue(vertexX: number, vertexY: number, value: number): void {
+    if (!this.adjacent(vertexX, vertexY)) return;
+    this.edges.set(`${vertexX}-${vertexY}`, value);
+  }
 }
 
-const graphInstance = new Graph();
-graphInstance.addNode(1);
-graphInstance.addNode(2);
-graphInstance.addNode(3);
-graphInstance.addNode(4);
-graphInstance.addEdge(1, 2);
-graphInstance.addEdge(1, 3);
-graphInstance.addEdge(3, 4);
-console.log(graphInstance.adjacent(2, 1));
-console.log(graphInstance.neighbors(1));
-console.log(graphInstance.nodes);
-// console.log(graphInstance.removeVertex(1));
-// console.log(graphInstance.removeEdge(3, 1));
-console.log(graphInstance.nodes);
-console.log(graphInstance.getVertexValue(1));
+// const G = new Graph();
+// G.addVertex(1);
+// G.addVertex(2);
+// G.addVertex(3);
+// G.addEdge(1, 2);
+// G.addEdge(1, 3);
+
+// console.log(G);
+// console.log(G.neighbors(2));
+// console.log(G.nodes);
+// // console.log(G.removeEdge(1, 2));
+// // console.log(G.removeVertex(2));
+// console.log(G.nodes);
+// console.log(G.showConnections());

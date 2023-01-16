@@ -6,7 +6,7 @@ type NodeProps = {
 };
 
 interface QueueProps {
-  queue: Array<NodeProps>;
+  queue: Set<NodeProps>;
   dequeuedNode: NodeProps | null;
 }
 
@@ -14,8 +14,8 @@ const QueueComponent = ({ queue, dequeuedNode }: QueueProps) => {
   return (
     <>
       <div className="flex flex-col flex-wrap items-center space-y-4 border-4 border-gray-900 bg-gray-500 p-4 dark:border-white dark:bg-white">
-        {queue.length > 0 ? (
-          queue.map((node, index) => (
+        {queue.size > 0 ? (
+          Array.from(queue).map((node, index) => (
             <QueueItem key={index} name={node.name} index={index + 1} />
           ))
         ) : (

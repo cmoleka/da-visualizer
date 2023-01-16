@@ -1,28 +1,73 @@
-import { Node as NodeClass } from "@lib/ds/node";
-import { Queue } from "@lib/ds/queue";
-import { Graph } from "@lib/ds/graph";
+import type { Graph } from "@lib/ds/graph";
+import type { Queue } from "@lib/ds/queue";
 
 /**
 * *pseudo code of the algorithm:
 * function Dijkstra(Graph, source):
-       dist[source]  := 0                     // Distance from source to source is set to 0
-       for each vertex v in Graph:            // Initializations
-           if v ≠ source
-               dist[v]  := infinity           // Unknown distance function from source to each node set to infinity
-           add v to Q                         // All nodes initially in Q
+    dist[source]  := 0                     // Distance from source to source is set to 0
+    for each vertex v in Graph:            // Initializations
+        if v ≠ source
+            dist[v]  := infinity           // Unknown distance function from source to each node set to infinity
+        add v to Q                         // All nodes initially in Q
 
-      whilQ is not empty:                  // The main loop
-          v := vertex in Q with min dist[v]  // In the first run-through, this vertex is the source node
-          remove v from Q
+    whilQ is not empty:                  // The main loop
+        v := vertex in Q with min dist[v]  // In the first run-through, this vertex is the source node
+        remove v from Q
 
-          for each neighbor u of v:           // where neighbor u has not yet been removed from Q.
-              alt := dist[v] + length(v, u)
-              if alt < dist[u]:               // A shorter path to u has been found
-                  dist[u]  := alt            // Update distance of u
+        for each neighbor u of v:           // where neighbor u has not yet been removed from Q.
+            alt := dist[v] + length(v, u)
+            if alt < dist[u]:               // A shorter path to u has been found
+                dist[u]  := alt            // Update distance of u
 
-      return dist[]
+    return dist[]
   end function
+  */
+export const Dijkstra = (
+  Graph: Graph,
+  Queue: Queue<number>,
+  source: number,
+  target: number
+): number[] | null => {
+  const dist: Map<number, number> = new Map();
+  const visited: Map<number, number> = new Map();
+  Array.from(Graph.nodes).forEach(([node]) => {
+    node !== source ? dist.set(node, Infinity) : dist.set(node, 0);
+    Queue.enqueue(node);
+  });
 
+  while (!Queue.isEmpty()) {
+    let vertex = Array.from(Queue.queue).reduce((min, vertex) => {
+      return (dist.get(vertex) as number) < (dist.get(min) as number)
+        ? vertex
+        : min;
+    });
+    Queue.dequeue();
+
+    if (vertex === target) {
+      const path = [vertex];
+      while (vertex !== target) {
+        path.unshift(visited.get(vertex) as number);
+        vertex = visited.get(vertex) as number;
+      }
+      return path;
+    }
+
+    for (const neighbor of Graph.nodes.get(vertex) as number[]) {
+      const alt =
+        (dist.get(vertex) as number) +
+        ((Graph.edges.get(`${vertex}-${neighbor}`) as number)
+          ? (Graph.edges.get(`${vertex}-${neighbor}`) as number)
+          : 1);
+      if (alt < (dist.get(neighbor) as number)) {
+        dist.set(neighbor, alt);
+        visited.set(neighbor, alt);
+      }
+    }
+  }
+  return null;
+};
+
+/**
 * *The graph has the following:
   - vertices, or nodes, denoted in the algorithm by v or u;
   - weighted edges that connect two nodes: (u,v) denotes an edge, and w(u,v) denotes its weight.
@@ -50,7 +95,3 @@ import { Graph } from "@lib/ds/graph";
 
 * !Note: The weight of an edge (u,v) is taken from the value asociated with (u,v) on the graph.
 */
-const graphInstance = new Graph();
-export const Dijkstra = (): void => {
-  return;
-};
