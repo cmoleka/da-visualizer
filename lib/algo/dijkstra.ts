@@ -28,39 +28,50 @@ export const Dijkstra = (
   source: number,
   target: number
 ): number[] | null => {
-  const dist: Map<number, number> = new Map();
-  const visited: Map<number, number> = new Map();
   Array.from(Graph.nodes).forEach(([node]) => {
-    node !== source ? dist.set(node, Infinity) : dist.set(node, 0);
+    node !== source
+      ? Graph.setVertexDistance(node, Infinity)
+      : Graph.setVertexDistance(node, 0);
+    node === source && Graph.setVertexIsSource(node, true);
     Queue.enqueue(node);
   });
 
   while (!Queue.isEmpty()) {
     let vertex = Array.from(Queue.queue).reduce((min, vertex) => {
-      return (dist.get(vertex) as number) < (dist.get(min) as number)
+      return (Graph.getVertexDistance(vertex) as number) <
+        (Graph.getVertexDistance(min) as number)
         ? vertex
         : min;
     });
+    if (Graph.getVertexIsVisited(vertex)) continue;
+    Graph.setVertexIsVisited(vertex, true);
     Queue.dequeue();
 
     if (vertex === target) {
-      const path = [vertex];
+      const path: number[] = [vertex];
       while (vertex !== target) {
-        path.unshift(visited.get(vertex) as number);
-        vertex = visited.get(vertex) as number;
+        path.unshift(Graph.getEdgeValueByNode(vertex) as number);
+        vertex = Graph.getEdgeValueByNode(vertex) as number;
       }
+      Graph.setVertexIsTarget(vertex, true);
       return path;
     }
 
-    for (const neighbor of Graph.nodes.get(vertex) as number[]) {
-      const alt =
-        (dist.get(vertex) as number) +
-        ((Graph.edges.get(`${vertex}-${neighbor}`) as number)
-          ? (Graph.edges.get(`${vertex}-${neighbor}`) as number)
-          : 1);
-      if (alt < (dist.get(neighbor) as number)) {
-        dist.set(neighbor, alt);
-        visited.set(neighbor, alt);
+    if (Graph.getVertexIsWall(vertex)) {
+      continue;
+    }
+
+    for (const neighbor of Graph.getVertexValue(vertex) as number[]) {
+      const alt = Graph.getVertexIsWall(neighbor)
+        ? (Graph.getVertexDistance(vertex) as number) + 5
+        : (Graph.getVertexDistance(vertex) as number) + 1;
+      // (Graph.getNodeKey(vertex) as number) +
+      // ((Graph.edges.get(`${vertex}-${neighbor}`) as number)
+      //   ? (Graph.edges.get(`${vertex}-${neighbor}`) as number)
+      //   : 1);
+      if (alt < (Graph.getVertexDistance(neighbor) as number)) {
+        Graph.setVertexDistance(neighbor, alt);
+        Graph.setEdgeValueByNode(neighbor, alt);
       }
     }
   }

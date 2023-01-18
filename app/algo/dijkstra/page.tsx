@@ -1,16 +1,19 @@
 "use client";
 
-import type { ChangeEvent, FC, FormEvent, MutableRefObject } from "react";
+import type { FC, FormEvent, MutableRefObject } from "react";
 import { useRef, useState } from "react";
 import { Dijkstra } from "@lib/algo/dijkstra";
 import { Graph } from "@lib/ds/graph";
 import { Queue } from "@lib/ds/queue";
 import { BoardComponent } from "@ui/Board";
+import { StringValidation } from "zod";
+import { setRequestMeta } from "next/dist/server/request-meta";
 
 type FormType = {
   maxSize: number;
   sourceNode: number;
   targetNode: number;
+  buttonId: string;
 };
 
 const DijkstraPage: FC = () => {
@@ -26,16 +29,23 @@ const DijkstraPage: FC = () => {
       maxSize: boardSize,
     })
   );
+  const [sourceNode, setSourceNode] = useState<number>(0);
+  const [targetNode, setTargetNode] = useState<number>(0);
 
   const [isDone, setIsDone] = useState<boolean>(false);
 
   const [result, setResult] = useState<number[]>([]);
+  const [isReset, setIsReset] = useState<boolean>(false);
 
-  const handleOnMaxSizeChange = (): void => {
+  const handleOnMaxSizeChange = () => {
     const maxSize = Form.current.maxSize as 50 | 100 | 200;
     if (!maxSize) return;
     setBoardSize(maxSize);
     queueInstance.setMaxSize(maxSize);
+  };
+
+  const handleOnPopulate = () => {
+    const maxSize = Form.current.maxSize as 50 | 100 | 200;
     for (let i = 1; i <= maxSize; i++) {
       graphInstance.addVertex(i);
     }
@@ -47,9 +57,30 @@ const DijkstraPage: FC = () => {
     }
   };
 
+  const handleOnReset = () => {
+    // for (const node of graphInstance.nodes.keys()) {
+    //   graphInstance.nodes.delete(node);
+    // }
+    // for (const edge of graphInstance.edges.keys()) {
+    //   graphInstance.edges.delete(edge);
+    // }
+    // for (const item of queueInstance.queue.keys()) {
+    //   queueInstance.queue.delete(item);
+    // }
+    setBoardSize(0);
+    setGraphInstance(new Graph());
+    setQueueInstance(new Queue({ maxSize: 0 }));
+    setIsReset(false);
+  };
+
   const handleAlgorithmRun = () => {
     if (!isDone) {
-      const algoResult = Dijkstra(graphInstance, queueInstance, 1, 46);
+      const algoResult = Dijkstra(
+        graphInstance,
+        queueInstance,
+        sourceNode,
+        targetNode
+      );
       // console.log(algoInstance);
       if (algoResult === null) {
         console.log("failed", algoResult);
@@ -67,8 +98,15 @@ const DijkstraPage: FC = () => {
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    handleAlgorithmRun();
+    console.log(Form.current.buttonId);
+    if (Form.current.buttonId === "reset") {
+      setIsReset(true);
+      handleOnReset();
+    }
+    if (Form.current.buttonId === "populate") handleOnPopulate();
+    if (Form.current.buttonId === "submit") handleAlgorithmRun();
   };
+
   return (
     <>
       <header className="space-y-4">
@@ -119,12 +157,38 @@ const DijkstraPage: FC = () => {
               ))}
             </select>
             <button
+              id="populate"
+              name="populate"
+              className="w-full rounded-md  bg-green-600 py-2  px-4 text-base font-bold capitalize text-white"
+              onClick={(e) => {
+                const target = e.target as HTMLButtonElement;
+                Form.current.buttonId = target.name;
+              }}
+            >
+              Populate Board
+            </button>
+            <button
+              id="reset"
+              name="reset"
+              className="w-full rounded-md  bg-red-600 py-2  px-4 text-base font-bold capitalize text-white"
+              onClick={(e) => {
+                const target = e.target as HTMLButtonElement;
+                Form.current.buttonId = target.name;
+              }}
+            >
+              Reset Board
+            </button>
+            <button
               id="submit"
               name="submit"
               type="submit"
               className="w-full rounded-md  bg-blue-600 py-2  px-4 text-base font-bold capitalize text-white"
+              onClick={(e) => {
+                const target = e.target as HTMLButtonElement;
+                Form.current.buttonId = target.name;
+              }}
             >
-              Run Algo
+              Run Algorithm
             </button>
           </div>
           <section className="flex w-full flex-col justify-center md:w-7/12">
@@ -135,6 +199,8 @@ const DijkstraPage: FC = () => {
               boardSize={boardSize}
               nodes={graphInstance.nodes}
               edges={graphInstance.edges}
+              handleGetSource={setSourceNode}
+              handleGetTarget={setTargetNode}
             />
           </section>
         </form>
