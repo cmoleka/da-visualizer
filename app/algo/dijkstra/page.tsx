@@ -6,8 +6,6 @@ import { Dijkstra } from "@lib/algo/dijkstra";
 import { Graph } from "@lib/ds/graph";
 import { Queue } from "@lib/ds/queue";
 import { BoardComponent } from "@ui/Board";
-import { StringValidation } from "zod";
-import { setRequestMeta } from "next/dist/server/request-meta";
 
 type FormType = {
   maxSize: number;
@@ -16,13 +14,23 @@ type FormType = {
   buttonId: string;
 };
 
+type NodeProps = {
+  distance: number;
+  edges: number[];
+  isVisited: boolean;
+  isWall: boolean;
+  isSource: boolean;
+  isTarget: boolean;
+};
+
+
 const DijkstraPage: FC = () => {
   const Form = useRef<HTMLFormElement>(null) as MutableRefObject<
     HTMLFormElement & FormType
   >;
   const MAX_SIZE = [50, 100, 200] as const;
   const [boardSize, setBoardSize] = useState<50 | 100 | 200 | 0>(0);
-  const [graphInstance] = useState<Graph>(new Graph());
+  const [graphInstance, setGraphInstance] = useState<Graph>(new Graph());
 
   const [queueInstance] = useState<Queue<number>>(
     new Queue({
@@ -45,16 +53,19 @@ const DijkstraPage: FC = () => {
   };
 
   const handleOnPopulate = () => {
+    handleOnReset()
     const maxSize = Form.current.maxSize as 50 | 100 | 200;
+    const newGraph = new Graph(graphInstance);
     for (let i = 1; i <= maxSize; i++) {
-      graphInstance.addVertex(i);
+      newGraph.addVertex(i);
     }
-    for (const vertex of graphInstance.nodes.keys()) {
+    for (const vertex of newGraph.nodes.keys()) {
       if (vertex < maxSize) {
-        graphInstance.addEdge(vertex, vertex + 1);
-        graphInstance.setEdgeValue(vertex, vertex + 1, vertex);
+        newGraph.addEdge(vertex, vertex + 1);
+        newGraph.setEdgeValue(vertex, vertex + 1, vertex);
       }
     }
+    setGraphInstance(newGraph)
   };
 
   const handleOnReset = () => {
@@ -68,9 +79,12 @@ const DijkstraPage: FC = () => {
     //   queueInstance.queue.delete(item);
     // }
     setBoardSize(0);
-    setGraphInstance(new Graph());
-    setQueueInstance(new Queue({ maxSize: 0 }));
-    setIsReset(false);
+    // graphInstance.nodes = new Map<number, NodeProps>();
+    // graphInstance.edges = new Map<string, number>();
+    queueInstance.queue = new Set<number>();
+    const newGraph = new Graph()
+    // const newQueue = new Queue({maxSize: 0})
+    setGraphInstance(newGraph)
   };
 
   const handleAlgorithmRun = () => {
@@ -98,11 +112,7 @@ const DijkstraPage: FC = () => {
 
   const handleOnSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(Form.current.buttonId);
-    if (Form.current.buttonId === "reset") {
-      setIsReset(true);
-      handleOnReset();
-    }
+    if (Form.current.buttonId === "reset") handleOnReset();
     if (Form.current.buttonId === "populate") handleOnPopulate();
     if (Form.current.buttonId === "submit") handleAlgorithmRun();
   };

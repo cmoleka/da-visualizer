@@ -6,8 +6,8 @@ type NodeProps = {
   isSource: boolean;
   isTarget: boolean;
 };
+
 export class Graph {
-  // nodes: { [key: number]: number[] } = {};
   nodes: Map<number, NodeProps> = new Map();
   edges: Map<string, number> = new Map();
 
@@ -157,30 +157,3 @@ export class Graph {
   }
 }
 
-// const G = new Graph();
-// G.addVertex(1);
-// G.addVertex(2);
-// G.addVertex(3);
-// G.addVertex(4);
-// G.addEdge(1, 2);
-// G.addEdge(1, 3);
-// G.addEdge(2, 4);
-// console.log(G);
-// console.log(G.neighbors(2));
-// console.log(G.nodes);
-// // console.log(G.removeEdge(1, 2));
-// // console.log(G.removeVertex(2));
-// console.log(G.nodes);
-// console.log(G.showConnections());
-// console.log(G.getNodeKey(3));
-// console.log(G.setVertexValue(1, { distance: 1 }));
-// console.log(G.setVertexValue(2, { distance: Infinity }));
-// console.log(G.setVertexValue(3, { distance: 40 }));
-// console.log(G.nodes);
-// console.log(G.setVertexDistance(1, 1));
-// console.log(G.getVertexDistance(1));
-// console.log(G.setVertexIsWall(1, true));
-// console.log(G.setVertexIsVisited(1, true));
-// console.log(G.getVertexIsWall(1));
-// console.log(G.getVertexIsVisited(1));
-// console.log(G.nodes);
